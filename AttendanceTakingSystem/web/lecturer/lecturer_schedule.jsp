@@ -3,7 +3,8 @@
     Created on : Oct 10, 2023, 9:23:37 PM
     Author     : nghia
 --%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,117 +15,36 @@
     </head>
     <body>
         <h1>Weekly Timetable</h1>
-        <table>
-            <tr>
-                <th rowspan="2">
-                    <span class="auto-style1">
-                        <strong>YEAR</strong>
-                    </span>
-                    <select>
-                        <option value="2021">2021</option>
-                        <option value="2022">2022</option>
-                        <option value="2023" selected="selected">2023</option>
-                        <option value="2024">2024</option>
-                    </select>
-                    <br>
-                    WEEK
-                    <select>
-                        <option value="1">02/01 To 08/01</option>
-                        <option value="2" selected="selected">09/01 To 15/01</option>
-                        <option value="3">16/01 To 22/01</option>
-                    </select>
-
-
-                </th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-                <th>Sat</th>
-                <th>Sun</th>
-            </tr>
+        <form action="schedule" method="GET">
+            From <input type="date" name="from" value="${requestScope.from}"/> <br/>
+            To <input type="date" name="to" value="${requestScope.to}"/>
+            <input type="hidden" value="${param.id}" name="id"/>
+            <input type="submit" value="View"/>
+        </form>
+        <table border="1px">
             <tr>
                 <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <c:forEach items="${requestScope.dates}" var="d">
+                    <th>
+                        <fmt:formatDate value="${d}" pattern="dd/MM" var="formattedDate" />
+                        <p>${formattedDate}</p>
+                    </th>
+                </c:forEach>
             </tr>
-            <tr>
-                <td>SLOT 1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>SLOT 2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>SLOT 3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>SLOT 4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>SLOT 5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>SLOT 6</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>SLOT 7</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
+            <c:forEach items="${requestScope.slots}" var="s">
+                <tr>
+                    <td>${s.description}</td>
+                    <c:forEach items="${requestScope.dates}" var="d">
+                        <td>
+                            <c:forEach items="${requestScope.sessions}" var="ses">
+                                <c:if test="${ses.time.id eq s.id and ses.date eq d}">
+                                    ${ses.group.name}-${ses.subject.name}-${ses.room.rid}
+                                </c:if>
+                            </c:forEach>
+                        </td>
+                    </c:forEach>
+                </tr>  
+            </c:forEach>
         </table>
-
     </body>
 </html>
