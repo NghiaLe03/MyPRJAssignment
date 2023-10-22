@@ -28,6 +28,8 @@
                     <th>
                         <fmt:formatDate value="${d}" pattern="dd/MM" var="formattedDate" />
                         <p>${formattedDate}</p>
+                        <fmt:formatDate value="${d}" pattern="EEEE" var="formattedDate" />
+                        <p>${formattedDate}</p>
                     </th>
                 </c:forEach>
             </tr>
