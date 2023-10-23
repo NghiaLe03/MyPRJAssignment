@@ -24,7 +24,7 @@
         <table border="1px">
             <tr>
                 <th></th>
-                <c:forEach items="${requestScope.dates}" var="d">
+                    <c:forEach items="${requestScope.dates}" var="d">
                     <th>
                         <fmt:formatDate value="${d}" pattern="dd/MM" var="formattedDate" />
                         <p>${formattedDate}</p>
@@ -40,7 +40,9 @@
                         <td>
                             <c:forEach items="${requestScope.sessions}" var="ses">
                                 <c:if test="${ses.time.id eq s.id and ses.date eq d}">
-                                    ${ses.group.name}-${ses.subject.name}-${ses.room.rid}
+                                    <a href="attendance?id=${ses.id}"> ${ses.group.name}-${ses.subject.name}-${ses.room.rid}</a>
+                                    <c:if test="${ses.isAtt}">(attended)</c:if>
+                                    <c:if test="${!ses.isAtt}">(Not yet)</c:if>
                                 </c:if>
                             </c:forEach>
                         </td>
