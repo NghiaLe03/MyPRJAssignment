@@ -27,7 +27,7 @@ public class SessionDBContext extends DBContext<Session> {
     public ArrayList<Session> getSessions(int iid, Date from, Date to) {
         ArrayList<Session> sessions = new ArrayList<>();
         try {
-            String sql = "SELECT s.sesid,s.date,r.roomid,t.tid,g.gid,g.gname,su.subid,subname,i.iid,i.iname\n"
+            String sql = "SELECT s.sesid,s.date,r.roomid,t.tid,g.gid,g.gname,su.subid,subname,i.iid,i.iname,s.isAtt\n"
                     + "FROM [Session] s INNER JOIN [Instructor] i ON i.iid = s.iid\n"
                     + "				INNER JOIN [Group] g ON g.gid = s.gid\n"
                     + "				INNER JOIN [TimeSlot] t ON s.tid = t.tid\n"
@@ -43,6 +43,7 @@ public class SessionDBContext extends DBContext<Session> {
                 Session session = new Session();
                 session.setId(rs.getInt("sesid"));
                 session.setDate(rs.getDate("date"));
+                session.setIsAtt(rs.getBoolean("isAtt"));
                 Room room = new Room();
                 room.setRid(rs.getString("roomid"));
                 session.setRoom(room);
