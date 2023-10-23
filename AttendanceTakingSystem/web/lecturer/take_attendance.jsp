@@ -3,7 +3,7 @@
     Created on : Oct 10, 2023, 10:23:31 PM
     Author     : nghia
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,88 +14,45 @@
     </head>
     <body>
         <h1>Single Activity Attendance</h1>
-        <form>
-            <table>
+        <h2>Current Session: ${requestScope.ses.group.name}-${requestScope.ses.subject.name}-${requestScope.ses.room.rid}
+            -${requestScope.ses.time.description}</h2> <br/>
+        <form action="attendance" method="POST">
+            <table border="1px"> 
                 <tr>
-                    <th>no</th>
-                    <th>group</th>
-                    <th>code</th>
-                    <th>name</th>
-                    <th>image</th>
-                    <th>comment</th>
-                    <th>status</th>
+                    <th>Student</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Time</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <input type="text" name="comment" placeholder="Write your comment here">
-                    </td>
-                    <td>
-                        <input type="radio" name="s1" value="absent" checked> <span class="auto-style1">Absent</span>
-                        <input type="radio" name="s1" value="present"> <span class="auto-style2">Present</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <input type="text" name="comment" placeholder="Write your comment here">
-                    </td>
-                    <td>
-                        <input type="radio" name="s2" value="absent" checked> <span class="auto-style1">Absent</span>
-                        <input type="radio" name="s2" value="present"> <span class="auto-style2">Present</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <input type="text" name="comment" placeholder="Write your comment here">
-                    </td>
-                    <td>
-                        <input type="radio" name="s3" value="absent" checked> <span class="auto-style1">Absent</span>
-                        <input type="radio" name="s3" value="present"> <span class="auto-style2">Present</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <input type="text" name="comment" placeholder="Write your comment here">
-                    </td>
-                    <td>
-                        <input type="radio" name="s4" value="absent" checked> <span class="auto-style1">Absent</span>
-                        <input type="radio" name="s4" value="present"> <span class="auto-style2">Present</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <input type="text" name="comment" placeholder="Write your comment here">
-                    </td>
-                    <td>
-                        <input type="radio" name="s5" value="absent" checked> <span class="auto-style1">Absent</span>
-                        <input type="radio" name="s5" value="present"> <span class="auto-style2">Present</span>
-                    </td>
-                </tr>
+                <c:forEach items="${requestScope.atts}" var="a">
+                    <tr>
+                        <td>${a.student.name}
+                            <input type="hidden" name="stuid" value="${a.student.id}"/>
+                        </td>
+                        <td>
+                            <input type="radio"
+                                   <c:if test="${!a.status}">
+                                       checked="checked"
+                                   </c:if>
+                                       name="status${a.student.id}" value="absent"/><span class="auto-style1">Absent</span>
+                            <input type="radio"
+                                   <c:if test="${a.status}">
+                                       checked="checked"
+                                   </c:if>
+                                       name="status${a.student.id}" value="present"/><span class="auto-style2">Present</span>
+                        </td>
+                        <td>
+                            <input type="text" value="${a.description}"
+                                   name="description${a.student.id}"/>
+                        </td>
+                        <td>${a.datetime}</td>
+                    </tr>   
+
+                </c:forEach>
             </table>
+            <input type="hidden" value="${requestScope.ses.id}" name="sesid"/>
+            <input type="submit" value="Save"/>
         </form>
+
     </body>
 </html>
