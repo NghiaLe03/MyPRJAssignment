@@ -4,6 +4,7 @@
  */
 package entity;
 
+import java.sql.Array;
 import java.util.ArrayList;
 
 /**
@@ -15,6 +16,16 @@ public class Student extends BaseEntity {
     private int id;
     private String name;
     private ArrayList<Group> groups = new ArrayList<>();
+    private ArrayList<Attendance> atts = new ArrayList<>();
+
+    public ArrayList<Attendance> getAtts() {
+        return atts;
+    }
+
+    public void setAtts(ArrayList<Attendance> atts) {
+        this.atts = atts;
+    }
+    
 
     public int getId() {
         return id;
