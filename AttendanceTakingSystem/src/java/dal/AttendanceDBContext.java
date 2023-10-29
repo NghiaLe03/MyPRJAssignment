@@ -20,6 +20,34 @@ import java.util.logging.Logger;
  */
 public class AttendanceDBContext extends DBContext<Attendance> {
 
+    public ArrayList<Attendance> getAttendanceReport(int gid, int subid, int iid, int stuid) {
+        ArrayList<Attendance> atts = new ArrayList<>();
+        try {
+            String sql = "select st.stuid, st.stuname, ISNULL(a.[status], 0) as [status] from [Session] s LEFT JOIN [Group_Student] gs ON s.gid = gs.gid\n"
+                    + "INNER JOIN [Group] g ON s.gid = g.gid \n"
+                    + "LEFT JOIN [Student] st ON st.stuid = gs.stuid\n"
+                    + "LEFT JOIN [Attendance] a ON s.sesid = a.sesid AND a.stuid = st.stuid\n"
+                    + "INNER JOIN [Instructor] i ON i.iid = s.iid\n"
+                    + "INNER JOIN [Subject] su ON su.subid = g.subid\n"
+                    + "WHERE g.gid = ? AND su.subid = ? AND i.iid = ? AND st.stuid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, gid);
+            stm.setInt(2, subid);
+            stm.setInt(3, iid);
+            stm.setInt(4, stuid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Attendance a = new Attendance();
+                a.setStatus(rs.getBoolean("status"));
+                atts.add(a);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AttendanceDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return atts;
+    }
+
     public ArrayList<Attendance> getAttendances(int sessid) {
         ArrayList<Attendance> atts = new ArrayList<>();
         try {
