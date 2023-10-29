@@ -26,6 +26,52 @@ import java.util.logging.Logger;
  */
 public class SessionDBContext extends DBContext<Session> {
 
+    public ArrayList<Session> getSessions(int iid, int gid, int subid) {
+        ArrayList<Session> sessions = new ArrayList<>();
+        try {
+            String sql = "SELECT s.sesid,s.date,r.roomid,t.tid,g.gid,g.gname,su.subid,subname,i.iid,i.iname,s.isAtt\n"
+                    + "FROM [Session] s INNER JOIN [Instructor] i ON i.iid = s.iid\n"
+                    + "INNER JOIN [Group] g ON g.gid = s.gid\n"
+                    + "INNER JOIN [TimeSlot] t ON s.tid = t.tid\n"
+                    + "INNER JOIN [Room] r ON r.roomid = s.rid\n"
+                    + "INNER JOIN [Subject] su ON g.subid = su.subid\n"
+                    + "WHERE i.iid = ? AND g.gid = ? AND su.subid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, iid);
+            stm.setInt(2, gid);
+            stm.setInt(3, subid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Session session = new Session();
+                session.setId(rs.getInt("sesid"));
+                session.setDate(rs.getDate("date"));
+                session.setIsAtt(rs.getBoolean("isAtt"));
+                Room room = new Room();
+                room.setRid(rs.getString("roomid"));
+                session.setRoom(room);
+                TimeSlot t = new TimeSlot();
+                t.setId(rs.getInt("tid"));
+                session.setTime(t);
+                Group g = new Group();
+                g.setId(rs.getInt("gid"));
+                g.setName(rs.getString("gname"));
+                session.setGroup(g);
+                Subject subject = new Subject();
+                subject.setId(rs.getInt("subid"));
+                subject.setName(rs.getString("subname"));
+                Instructor i = new Instructor();
+                i.setId(rs.getInt("iid"));
+                i.setName(rs.getString("iname"));
+                session.setInstructor(i);
+                session.setSubject(subject);
+                sessions.add(session);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sessions;
+    }
+
     public ArrayList<Session> getSessions(int iid, Date from, Date to) {
         ArrayList<Session> sessions = new ArrayList<>();
         try {
