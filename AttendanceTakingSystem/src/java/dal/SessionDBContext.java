@@ -10,6 +10,7 @@ import entity.Session;
 import entity.Room;
 import entity.TimeSlot;
 import entity.Group;
+import entity.Instructor;
 import entity.Subject;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -59,6 +60,10 @@ public class SessionDBContext extends DBContext<Session> {
                 subject.setId(rs.getInt("subid"));
                 subject.setName(rs.getString("subname"));
                 session.setSubject(subject);
+                Instructor i = new Instructor();
+                i.setId(rs.getInt("iid"));
+                i.setName(rs.getString("iname"));
+                session.setInstructor(i);
                 sessions.add(session);
             }
         } catch (SQLException ex) {
@@ -171,6 +176,10 @@ public class SessionDBContext extends DBContext<Session> {
                 subject.setId(rs.getInt("subid"));
                 subject.setName(rs.getString("subname"));
                 session.setSubject(subject);
+                Instructor i = new Instructor();
+                i.setId(rs.getInt("iid"));
+                i.setName(rs.getString("iname"));
+                session.setInstructor(i);
                 return session;
             }
         } catch (SQLException ex) {
