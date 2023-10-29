@@ -41,6 +41,7 @@
                             <c:forEach items="${requestScope.sessions}" var="ses">
                                 <c:if test="${ses.time.id eq s.id and ses.date eq d}">
                                     <a href="attendance?id=${ses.id}"> ${ses.group.name}-${ses.subject.name}-${ses.room.rid}</a>
+                                    <a href="report?iid=${ses.instructor.id}&gid=${ses.group.id}&subid=${ses.subject.id}">View Report</a>
                                     <c:if test="${ses.isAtt}">(attended)</c:if>
                                     <c:if test="${!ses.isAtt}">(Not yet)</c:if>
                                 </c:if>
