@@ -34,11 +34,16 @@
                     <td></td>
                     <c:forEach var="a" items="${st.atts}">
                         <td>
-                            <c:if test="${!a.status}">
-                                <span class="auto-style1">A</span>
+                            <c:if test="${a.session.isAtt}">
+                                <c:if test="${!a.status}">
+                                    <span class="auto-style1">A</span>
+                                </c:if>
+                                <c:if test="${a.status}">
+                                    <span class="auto-style2">P</span>
+                                </c:if>
                             </c:if>
-                            <c:if test="${a.status}">
-                                <span class="auto-style2">P</span>
+                            <c:if test="${!a.session.isAtt}">
+                                Not Yet
                             </c:if>
                         </td>
 

@@ -23,7 +23,7 @@ public class AttendanceDBContext extends DBContext<Attendance> {
     public ArrayList<Attendance> getAttendanceReport(int gid, int subid, int iid, int stuid) {
         ArrayList<Attendance> atts = new ArrayList<>();
         try {
-            String sql = "select st.stuid, st.stuname, ISNULL(a.[status], 0) as [status] from [Session] s LEFT JOIN [Group_Student] gs ON s.gid = gs.gid\n"
+            String sql = "select st.stuid, st.stuname, a.[status], s.isAtt from [Session] s LEFT JOIN [Group_Student] gs ON s.gid = gs.gid\n"
                     + "INNER JOIN [Group] g ON s.gid = g.gid \n"
                     + "LEFT JOIN [Student] st ON st.stuid = gs.stuid\n"
                     + "LEFT JOIN [Attendance] a ON s.sesid = a.sesid AND a.stuid = st.stuid\n"
@@ -38,6 +38,9 @@ public class AttendanceDBContext extends DBContext<Attendance> {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Attendance a = new Attendance();
+                Session s = new Session();
+                s.setIsAtt(rs.getBoolean("isAtt"));
+                a.setSession(s);
                 a.setStatus(rs.getBoolean("status"));
                 atts.add(a);
 
