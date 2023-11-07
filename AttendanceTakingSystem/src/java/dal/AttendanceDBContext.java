@@ -5,6 +5,7 @@
 package dal;
 
 import entity.Attendance;
+import entity.Report;
 import entity.Session;
 import entity.Student;
 import java.sql.PreparedStatement;
@@ -19,6 +20,35 @@ import java.util.logging.Logger;
  * @author nghia
  */
 public class AttendanceDBContext extends DBContext<Attendance> {
+
+    public Report getAbsentPercentage(int gid, int subid, int iid, int stuid) {
+        Report r = new Report();
+        try {
+            String sql = "select COUNT(s.isAtt) as [total], COUNT(CASE WHEN a.[status] = 0 THEN a.[status] END) as [absent]\n"
+                    + "from [Session] s \n"
+                    + "LEFT JOIN [Group_Student] gs ON s.gid = gs.gid\n"
+                    + "INNER JOIN [Group] g ON s.gid = g.gid \n"
+                    + "LEFT JOIN [Student] st ON st.stuid = gs.stuid\n"
+                    + "LEFT JOIN [Attendance] a ON s.sesid = a.sesid AND a.stuid = st.stuid\n"
+                    + "INNER JOIN [Instructor] i ON i.iid = s.iid\n"
+                    + "INNER JOIN [Subject] su ON su.subid = g.subid\n"
+                    + "WHERE g.gid = ? AND su.subid = ? AND i.iid = ? AND st.stuid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, gid);
+            stm.setInt(2, subid);
+            stm.setInt(3, iid);
+            stm.setInt(4, stuid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                r.setTotal_session(rs.getInt("total"));
+                r.setAbsent(rs.getInt("absent"));
+                r.setPercentage(r.getTotal_session(), r.getAbsent());
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AttendanceDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return r;
+    }
 
     public ArrayList<Attendance> getAttendanceReport(int gid, int subid, int iid, int stuid) {
         ArrayList<Attendance> atts = new ArrayList<>();

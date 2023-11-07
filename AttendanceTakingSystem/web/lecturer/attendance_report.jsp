@@ -31,7 +31,16 @@
             <c:forEach items="${requestScope.students}" var="st">
                 <tr>
                     <td>${st.name}</td>
-                    <td></td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${st.report.percentage > 20}">
+                                <span style="color: red;">${st.report.percentage}%</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span>${st.report.percentage}%</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                     <c:forEach var="a" items="${st.atts}">
                         <td>
                             <c:if test="${a.session.isAtt}">

@@ -8,6 +8,7 @@ import dal.AttendanceDBContext;
 import dal.SessionDBContext;
 import dal.StudentDBContext;
 import entity.Attendance;
+import entity.Report;
 import entity.Session;
 import entity.Student;
 import java.io.IOException;
@@ -75,10 +76,13 @@ public class AttendanceReportController extends HttpServlet {
             ArrayList<Attendance> atts = new ArrayList<>();
             atts = attDB.getAttendanceReport(groupid, subjectid, instructorid, st.getId());
             st.setAtts(atts);
+            Report r = new Report();
+            r = attDB.getAbsentPercentage(groupid, subjectid, instructorid, st.getId());
+            st.setReport(r);
         }
         request.setAttribute("students", stus);
         request.setAttribute("ses", sess);
-
+        
         request.getRequestDispatcher("../lecturer/attendance_report.jsp").forward(request, response);
     }
 

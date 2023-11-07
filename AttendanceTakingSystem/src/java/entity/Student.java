@@ -17,6 +17,15 @@ public class Student extends BaseEntity {
     private String name;
     private ArrayList<Group> groups = new ArrayList<>();
     private ArrayList<Attendance> atts = new ArrayList<>();
+    private Report report;
+
+    public Report getReport() {
+        return report;
+    }
+
+    public void setReport(Report report) {
+        this.report = report;
+    }
 
     public ArrayList<Attendance> getAtts() {
         return atts;
@@ -25,7 +34,6 @@ public class Student extends BaseEntity {
     public void setAtts(ArrayList<Attendance> atts) {
         this.atts = atts;
     }
-    
 
     public int getId() {
         return id;
