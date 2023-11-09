@@ -24,7 +24,7 @@ public abstract class DBContext<T extends BaseEntity> {
         try {
             String url = "jdbc:sqlserver://LAPTOP-RIAR25VO:1433;databaseName=Assignment";
             String user = "nghialm";
-            String pass = "Yen27011971";
+            String pass = "Nghialm1312";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException ex) {
